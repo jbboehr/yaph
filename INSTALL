@@ -1,0 +1,17 @@
+=============================================
+YAPH - Yet Another Proxy Hunter ver 0.91 INSTALL
+
+The installation procedure is very simple.
+Then , unpack the .tar.gz file, enter to the source directory
+and type :
+----------------------------------------------
+./confugure
+make
+make install
+----------------------------------------------
+thats' it    ;)
+
+note:
+*** you should be root to "make install".
+
+==============================================

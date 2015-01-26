@@ -1,0 +1,121 @@
+=================================================================
+YAPH - Yet Another Proxy Hunter ver 0.91 README
+
+To get full power of yaph you must have the following programs:
+Nmap			http://www.insecure.org/nmap			
+ProxyChains        http://proxychains.sourceforge.net
+
+General.
+Yaph provides ability to reveal public proxy servers.
+It can search&validate socks v4 , socks v5 and http (connect method) proxy servers.
+HTTP proxy servers are checked for CONNECT method only.
+Validated proxy server is public proxy that can be used for tcp tunneling.
+While using tcp tunneling your IP address stays private.
+The best tools (proxifiers) for tcp tunneling via proxies are :
+ProxyChains (unix)	http://proxychains.sourceforge.net
+ProxyCap (win)		http://www.proxylabs.com
+
+List cheking.
+Yaph knows to check list of proxy servers to reveal working proxies.
+Supported input formats are:
+1. Proxy Hunter format   ( the output of proxyhunter ) like:
+	192.168.1.2:8080@HTTP
+	192.168.1.3:8080@SOCKS4
+	192.168.1.4:8080@SOCKS5
+2. Proxy Chains format  ( as it appears in proxychains.conf) like:
+	http		192.168.1.2		8080
+	socks4	192.168.1.3		1080
+	socks5	192.168.1.4		1080
+
+Network scan.
+Yaph knows to use Nmap to find new proxy servers.
+get nmap from: http://www.insecure.org/nmap
+all nmap features are usable and supported :)
+
+Stealth mode  - your IP stays unknown.
+yaph might be run with ProxyCahins to provide source IP hiding for both
+"list cheking" & "network scan"
+
+Tutorial.
+You should be root to run yaph with nmap engine!!!!!.
+To find public proxies is not a trivial task. Port scans are treated as abuse.
+Thus, scan directly from your IP address is not quite a good idea.
+However, there are "stealth" techniques to use yaph:
+1. Use nmap scan with 7 or more "decoys", it will make "fake" alarms to IDS.
+	IDS will see that scan comes form many sources (IP) ,
+	while one of them is your real IP.
+	However, it is impossible to say for sure which one is originator of the scan,
+	when all "decoys" are real hosts that are "online" during the scan.	
+2. Use proxychains to hide your IP, while performing validation check for proxies.
+	in the logs of target host will be shown IP of proxy used, and not yours.
+3. Use decoys and proxychains together, to get speed and anonymity.
+	both methods can be used together.
+
+Yet, there is "yaph.conf".
+The .conf file describes some internal configurations that may affect performance of yaph
+You may want to change there some values :)
+The .conf file is well documented also.
+Configuration file lookup is performed by yaph in the following order:
+1)    ./yaph.conf
+2)    /etc/yaph.conf
+	
+
+
+Some examples for stealth scans:
+
+proxychains yaph -D10.1.1.2,10.2.5.1,10.1.3.2,10.2.5.4 10.0.0.*
+
+	in this example, nmap will scan hosts 10.0.0.1 to 10.0.0.255
+	loking for onpen ports 1080,8080,3128
+	with decoys 10.1.1.2 10.2.5.1 10.1.3.2 10.2.5.4
+	and then validation of open ports will be performed via proxy server
+	defined in proxychains.conf
+
+cat proxy_list.txt | sort | uniq | proxychains yaph --use_hunter_stdin
+
+	in this example, yaph wil validate addresses,
+	listed in proxy_list in proxyhunter syntax,
+	via proxy server defined in proxychains.conf.
+       sort & uniq is useful when your list contains not only unique targets
+       (some tagrets appear more than once) - it will check only unique targets
+
+proxychains yaph -sT -P0 10.0.0.*
+	
+	in this example EVERYTHING will go via proxyserver.
+	The nmap scan will go through proxy server!!!
+	Validation of open ports as well
+	scanned hosts are 10.0.0.1 - 10.0.0.255
+	(this is slow, but your IP is never appears in the logs of scanned hosts)
+
+
+Miscelanious examples:
+
+proxychains yaph --use_chains_stdin
+
+       in this example interactive mode is used.
+       just type on your console targets in proxychains format
+       hint: "type" can be "any" to do all checks fot given port
+       like:
+              any 192.168.35.46 5041
+       will check this host:port  for http, socks4 and socks5 proxy
+
+proxychains yaph --use_chains_stdin
+
+       in this example interactive mode is used.
+       just type on your console targets in proxyhunter format
+       hint: "type" can be "any" to do all checks fot given port
+       like:
+              192.168.35.46:5041@ANY
+       will check this host:port  for http, socks4 and socks5 proxy
+
+Hint:
+     If you are using proxychains set it to "random chain" for more performance	
+=========================================================
+
+	
+
+
+
+
+
+
