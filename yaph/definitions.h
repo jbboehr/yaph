@@ -84,6 +84,7 @@ typedef struct global_st
    FILE * result_f;
    FILE * log_file_f;
    engine_type et;
+   int privileged;
    sem_t check_sem;
    int paral_checks;
    bank_node *bank;
