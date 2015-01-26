@@ -201,6 +201,7 @@ char buff[1024];
             }
         }
 	no_file:
+	;
 }
 
 // ------   open files
